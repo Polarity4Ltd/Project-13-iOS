@@ -4,6 +4,8 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Project Thirteen needs access to your camera.</string>
 	<key>CFBundleDisplayName</key>
 	<string>Project 13</string>
 	<key>CFBundleExecutable</key>

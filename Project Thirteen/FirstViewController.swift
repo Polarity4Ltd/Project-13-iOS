@@ -7,93 +7,102 @@
 //
 
 import UIKit
+import Foundation
 
-struct cellData{
-    let cell : Int!
-    let companyNameVar : String!
-    let time : String!
-    let type : String!
-    let msgContent : String!
+struct CellDataList: Decodable{
+    var newsfeedList: [cellData]
 }
 
-class newsFeedItems: Codable{
-    let index: Int!
-    let title: String!
-    let text: String!
-    let dateTime: String!
+struct cellData: Decodable{
+    var index : Int?
+    var title : String?
+    var text : String?
+    var dateCreated : String?
+    
+    init(index:Int, title:String, text:String, dateCreated:String)
+    {
+        self.index = index
+        self.title = title
+        self.text = text
+        self.dateCreated = dateCreated
+    }
 }
+
 class FirstViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    var data = [cellData]()
-    var companyName = "Thirteen Group"
-    var messageType = "Customer Notification"
-    var msgContent = "Your payment of £375.00 has been authorised."
-    var timeStamp = "01/10/2019"
-    
-    func jsonFile(){
-        let url = URL(string: "https://polarity4services.azurewebsites.net/api/newsfeed/1")
-        let task = URLSession.shared.dataTask(with: url!) { (data, response, error) in
-        
-        if error != nil{
-            print(error!)
-        } else {
-            if let content = data{
-                do{
-                    if let json = try JSONSerialization.jsonObject(with: content, options: JSONSerialization.ReadingOptions.mutableContainers) as? [String: Any]{
-                        
-                        var dict = Dictionary<String, Any>()
-                        dict = json
-                        print(dict)
-                        
-                        let decoder = JSONDecoder()
-                        let feedData = try! decoder.decode(newsFeedItems.self, from: content)
-                        
-                        print(feedData.text)
-                    }
-                }
-                catch {
-                }
-            }
-        }
-    }
-        task.resume()
-    }
-    
-    
-    func createFeed(dictionary : NSDictionary){
-        //let valuesArray = dictionary.allValues
-        print(dictionary)
-        
-        for (key,value) in dictionary {
-            print("current key:\(key) value:\(value as! String)")
-        }
-        
-    }
-    
-    func caughtValues(companyName: String, messageTypeLabel: String, contentLabel: String){
-        
-    }
+    @IBOutlet weak var tableView: UITableView!
+    var newsFeedData = [cellData]()
+    var myData: CellDataList?
+    var refresher: UIRefreshControl!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        data = [cellData(cell: 1, companyNameVar: companyName, time: timeStamp, type: messageType, msgContent: msgContent)]
-        print(jsonFile())
-        // Do any additional setup after loading the view, typically from a nib.
+        
+        refresher = UIRefreshControl()
+        refresher.addTarget(self, action: #selector(FirstViewController.refreshTable), for: UIControl.Event.valueChanged)
+        loadDataFromService()
+        tableView.addSubview(refresher)
+        
+        refreshTable()
+
+    }
+    
+    func loadDataFromService(){
+        let jsonUrlString = "https://polarity4services.azurewebsites.net/api/newsfeed/1"
+        
+        guard let url = URL(string: jsonUrlString) else { return }
+        
+        URLSession.shared.dataTask(with: url) { (data, response, err) in
+            
+            guard let data = data else { return }
+            
+            do {
+                let feedItem = try JSONDecoder().decode(CellDataList.self, from: data)
+                
+                for listItem in feedItem.newsfeedList{
+                    
+                    let tempCell = cellData(index: listItem.index!, title: listItem.title!, text: listItem.text!, dateCreated: listItem.dateCreated!)
+                
+                    self.newsFeedData.append(tempCell)
+                }
+                
+                
+                
+            } catch let jsonErr {
+                print("Error serializing json:", jsonErr)
+            }
+            
+            }.resume()
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return data.count
+        return newsFeedData.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
+
+        
+        while (newsFeedData == nil){
+            print("sleep for 1.000 seconds.")
+            sleep(UInt32(1.000)) // not working
+        }
+        
+        print(newsFeedData[0].text!)
+        
+        
             let cell = Bundle.main.loadNibNamed("TableViewCell1TableViewCell", owner: self, options: nil)?.first as! TableViewCell1TableViewCell
         
-        cell.companyLabel.text = data[indexPath.row].companyNameVar
-        cell.timeLabel.text = data[indexPath.row].time
-        cell.messageTypeLabel.text = data[indexPath.row].type
-        cell.contentLabel.text = data[indexPath.row].msgContent
+        let timeTruncated = newsFeedData[indexPath.row].dateCreated
+        let timeArray = timeTruncated?.components(separatedBy:"T")
+        
+        print(timeArray!)
+        
+        cell.companyLabel.text = newsFeedData[indexPath.row].title
+        cell.timeLabel.text = newsFeedData[indexPath.row].dateCreated
+        cell.contentLabel.text = newsFeedData[indexPath.row].text
             return cell
+
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -102,10 +111,14 @@ class FirstViewController: UIViewController, UITableViewDelegate, UITableViewDat
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete{
-            data.remove(at: indexPath.row)
+            newsFeedData.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .automatic)
         }
     }
-
+    
+    @objc func refreshTable(){
+        refresher.endRefreshing()
+        tableView.reloadData()
+    }
 }
 

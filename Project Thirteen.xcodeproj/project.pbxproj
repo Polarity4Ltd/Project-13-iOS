@@ -16,6 +16,7 @@
 		0B8EC97722DCD16B00B89EED /* ThirdViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8EC97122DCD16B00B89EED /* ThirdViewController.swift */; };
 		0B8EC97822DCD16B00B89EED /* FourthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8EC97222DCD16B00B89EED /* FourthViewController.swift */; };
 		0B8EC97922DCD16B00B89EED /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0B8EC97322DCD16B00B89EED /* Main.storyboard */; };
+		0BBB02D222DE49FE00710FB5 /* PreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBB02D122DE49FE00710FB5 /* PreviewViewController.swift */; };
 		0BF6871A22DC885E003CE02B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF6871922DC885E003CE02B /* AppDelegate.swift */; };
 		0BF6872322DC8860003CE02B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0BF6872222DC8860003CE02B /* Assets.xcassets */; };
 		0BF6872622DC8860003CE02B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0BF6872422DC8860003CE02B /* LaunchScreen.storyboard */; };
@@ -50,6 +51,7 @@
 		0B8EC97122DCD16B00B89EED /* ThirdViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThirdViewController.swift; sourceTree = "<group>"; };
 		0B8EC97222DCD16B00B89EED /* FourthViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FourthViewController.swift; sourceTree = "<group>"; };
 		0B8EC97322DCD16B00B89EED /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		0BBB02D122DE49FE00710FB5 /* PreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewViewController.swift; sourceTree = "<group>"; };
 		0BF6871622DC885E003CE02B /* Project Thirteen.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Project Thirteen.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0BF6871922DC885E003CE02B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0BF6872222DC8860003CE02B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -112,6 +114,7 @@
 			isa = PBXGroup;
 			children = (
 				0B8EC97322DCD16B00B89EED /* Main.storyboard */,
+				0BBB02D122DE49FE00710FB5 /* PreviewViewController.swift */,
 				0B49E1F122DCD9B60032CE35 /* HeaderController.swift */,
 				0B49E1F222DCD9B60032CE35 /* HeaderController.xib */,
 				0B8EC96F22DCD16A00B89EED /* FirstViewController.swift */,
@@ -286,6 +289,7 @@
 				0B8EC97422DCD16B00B89EED /* SecondViewController.swift in Sources */,
 				0BF6871A22DC885E003CE02B /* AppDelegate.swift in Sources */,
 				0B49E1F322DCD9B60032CE35 /* HeaderController.swift in Sources */,
+				0BBB02D222DE49FE00710FB5 /* PreviewViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

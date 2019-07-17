@@ -11,7 +11,6 @@ import UIKit
 class TableViewCell1TableViewCell: UITableViewCell {
     @IBOutlet weak var companyLabel: UILabel!
     @IBOutlet weak var timeLabel: UILabel!
-    @IBOutlet weak var messageTypeLabel: UILabel!
     @IBOutlet weak var contentLabel: UILabel!
     
     override func awakeFromNib() {

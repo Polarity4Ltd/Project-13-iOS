@@ -10,7 +10,12 @@ import UIKit
 import AVFoundation
 
 class ThirdViewController: UIViewController {
-
+    @IBAction func captureImage(_ sender: Any) {
+        let settings = AVCapturePhotoSettings()
+        photoOutput?.capturePhoto(with: AVCapturePhotoSettings(), delegate: self)
+        print("tun")
+    }
+    
     var captureSession = AVCaptureSession()
     var backCamera: AVCaptureDevice?
     var frontCamera: AVCaptureDevice?
@@ -19,6 +24,9 @@ class ThirdViewController: UIViewController {
     var photoOutput: AVCapturePhotoOutput?
     
     var cameraPreviewLayer: AVCaptureVideoPreviewLayer?
+    
+    var image: UIImage?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupCaptureSession()
@@ -51,9 +59,11 @@ class ThirdViewController: UIViewController {
         do{
             let captureDeviceInput = try AVCaptureDeviceInput(device: currentCamera!)
             captureSession.addInput(captureDeviceInput)
-            photoOutput?.setPreparedPhotoSettingsArray([AVCapturePhotoSettings(format: [AVVideoCodecKey: AVVideoCodecType.jpeg])], completionHandler: nil)
+            photoOutput = AVCapturePhotoOutput()
+        photoOutput?.setPreparedPhotoSettingsArray([AVCapturePhotoSettings(format: [AVVideoCodecKey: AVVideoCodecType.jpeg])], completionHandler: nil)
+            captureSession.addOutput(photoOutput!)
         } catch {
-            
+            print(error)
         }
     }
     
@@ -62,21 +72,28 @@ class ThirdViewController: UIViewController {
         cameraPreviewLayer?.videoGravity = AVLayerVideoGravity.resizeAspectFill
         cameraPreviewLayer?.connection?.videoOrientation = AVCaptureVideoOrientation.portrait
         cameraPreviewLayer?.frame = self.view.frame
-        self.view.layer.insertSublayer(cameraPreviewLayer!, at: 0)
+        self.view.layer.insertSublayer(cameraPreviewLayer!, at: 100)
         
     }
     
     func setupRunningCaptureSession(){
         captureSession.startRunning()
     }
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+        if segue.identifier == "showPhotoSegue" {
+            let previewVC = segue.destination as! PreviewViewController
+            previewVC.image = self.image
+        }
     }
-    */
+}
 
+extension ThirdViewController: AVCapturePhotoCaptureDelegate{
+    func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
+        if let imageData = photo.fileDataRepresentation() {
+            print(imageData)
+            image = UIImage(data: imageData)
+            performSegue(withIdentifier: "showPhotoSegue", sender: nil)
+        }
+    }
 }
