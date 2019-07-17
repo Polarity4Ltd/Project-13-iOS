@@ -10,11 +10,13 @@ import UIKit
 import AVFoundation
 
 class ThirdViewController: UIViewController {
+    
     @IBAction func captureImage(_ sender: Any) {
         let settings = AVCapturePhotoSettings()
         photoOutput?.capturePhoto(with: AVCapturePhotoSettings(), delegate: self)
-        print("tun")
     }
+    
+    @IBOutlet weak var imageView: UIImageView!
     
     var captureSession = AVCaptureSession()
     var backCamera: AVCaptureDevice?

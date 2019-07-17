@@ -20,6 +20,8 @@ class PreviewViewController: UIViewController {
     
     @IBAction func useButton(_ sender: Any) {
     }
+
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         imageView.image = self.image

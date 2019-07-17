@@ -1,25 +1,32 @@
 //
-//  HeaderController.swift
+//  cellDetailsViewController.swift
 //  Project Thirteen
 //
-//  Created by Alex Pilcher on 15/07/2019.
+//  Created by Alex Pilcher on 17/07/2019.
 //  Copyright © 2019 Alex Pilcher. All rights reserved.
 //
 
 import UIKit
 
-class HeaderController: UIViewController {
-    @IBOutlet weak var strapLine: UILabel!
-    @IBOutlet weak var pageTitle: UILabel!
-    @IBOutlet weak var backgroundImage: UIImageView!
+class cellDetailsViewController: UIViewController {
+    
+    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var contentLabel: UILabel!
+    @IBOutlet weak var dateTimeLabel: UILabel!
+    
+    var cellTitle: String = ""
+    var cellText: String = ""
+    var cellDateCreated: String = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        titleLabel.text = cellTitle
+        contentLabel.text = cellText
+        dateTimeLabel.text = cellDateCreated
         // Do any additional setup after loading the view.
     }
-
-
+    
+    
     /*
     // MARK: - Navigation
 

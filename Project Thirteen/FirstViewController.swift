@@ -28,21 +28,21 @@ struct cellData: Decodable{
     }
 }
 
+
 class FirstViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet weak var tableView: UITableView!
     var newsFeedData = [cellData]()
     var myData: CellDataList?
     var refresher: UIRefreshControl!
-    
+    var dataLoaded = 0
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         refresher = UIRefreshControl()
         refresher.addTarget(self, action: #selector(FirstViewController.refreshTable), for: UIControl.Event.valueChanged)
         loadDataFromService()
         tableView.addSubview(refresher)
-        
         refreshTable()
 
     }
@@ -72,8 +72,12 @@ class FirstViewController: UIViewController, UITableViewDelegate, UITableViewDat
                 print("Error serializing json:", jsonErr)
             }
             
+            DispatchQueue.main.async { self.tableView.reloadData() }
+            
             }.resume()
     }
+    
+
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return newsFeedData.count
@@ -81,25 +85,16 @@ class FirstViewController: UIViewController, UITableViewDelegate, UITableViewDat
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-
-        
-        while (newsFeedData == nil){
-            print("sleep for 1.000 seconds.")
-            sleep(UInt32(1.000)) // not working
-        }
-        
-        print(newsFeedData[0].text!)
-        
-        
             let cell = Bundle.main.loadNibNamed("TableViewCell1TableViewCell", owner: self, options: nil)?.first as! TableViewCell1TableViewCell
         
         let timeTruncated = newsFeedData[indexPath.row].dateCreated
         let timeArray = timeTruncated?.components(separatedBy:"T")
         
-        print(timeArray!)
+        let time = String(timeArray![1]).prefix(5)
+        
         
         cell.companyLabel.text = newsFeedData[indexPath.row].title
-        cell.timeLabel.text = newsFeedData[indexPath.row].dateCreated
+        cell.timeLabel.text = String((timeArray?[0])!) + " at " + time
         cell.contentLabel.text = newsFeedData[indexPath.row].text
             return cell
 
@@ -114,6 +109,19 @@ class FirstViewController: UIViewController, UITableViewDelegate, UITableViewDat
             newsFeedData.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .automatic)
         }
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let VC = segue.destination as! cellDetailsViewController
+        let indexRow = tableView.indexPathForSelectedRow!
+        VC.cellTitle = newsFeedData[indexRow[1]].title!
+        VC.cellText = newsFeedData[indexRow[1]].text!
+        VC.cellDateCreated = newsFeedData[indexRow[1]].dateCreated!
+        
+        //ViewController.cellValues = [newsFeedData[indexRow[1]].title!,newsFeedData[indexRow[1]].text!,newsFeedData[indexRow[2]].dateCreated!]
+    }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        performSegue(withIdentifier: "pressCellSegue", sender: nil)
     }
     
     @objc func refreshTable(){
